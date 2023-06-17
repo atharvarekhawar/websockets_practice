@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      #main {
+        display: flex;
+        flex-direction: column;
+        row-gap: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="main"></div>
+
+    <!-- Include Socket.IO library -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      // Connect to the Socket.IO server
+      var socket = io();
+
+      // Retrieve the main div element
+      const main = document.getElementById("main");
+
+      // Listen for "message" event from the server
+      socket.on("message", (message) => {
+        const array = Object.values(message);
+        // Clear the contents of the main div
+        while (main.firstChild) {
+          main.removeChild(main.firstChild);
+        }
+        // Iterate through the array of messages and create div elements
+        array.forEach((msg) => {
+          const div = document.createElement("div");
+          div.innerText = msg;
+          main.appendChild(div);
+        });
+      });
+    </script>
+  </body>
+</html>

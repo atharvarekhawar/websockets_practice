@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Page 1</title>
+  </head>
+
+  <body>
+    <h1>Page 1</h1>
+    <!-- inputs -->
+    <div>
+      <label for="textbox1">Textbox 1:</label>
+      <input type="text" class="textbox" id="textbox1" />
+      <input type="checkbox" class="checkbox" id="checkbox1" />
+    </div>
+    <div>
+      <label for="textbox2">Textbox 2:</label>
+      <input type="text" class="textbox" id="textbox2" />
+      <input type="checkbox" class="checkbox" id="checkbox2" />
+    </div>
+    <div>
+      <label for="textbox3">Textbox 3:</label>
+      <input type="text" class="textbox" id="textbox3" />
+      <input type="checkbox" class="checkbox" id="checkbox3" />
+    </div>
+    <div>
+      <label for="textbox4">Textbox 4:</label>
+      <input type="text" class="textbox" id="textbox4" />
+      <input type="checkbox" class="checkbox" id="checkbox4" />
+    </div>
+    <div>
+      <label for="textbox5">Textbox 5:</label>
+      <input type="text" class="textbox" id="textbox5" />
+      <input type="checkbox" class="checkbox" id="checkbox5" />
+    </div>
+    <div>
+      <label for="textbox6">Textbox 6:</label>
+      <input type="text" class="textbox" id="textbox6" />
+      <input type="checkbox" class="checkbox" id="checkbox6" />
+    </div>
+
+     <!-- Include Socket.IO library -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+       // Connect to the Socket.IO server
+      var socket = io();
+
+      // Retrieve all checkboxes and textboxes
+      const checkboxes = document.querySelectorAll(".checkbox");
+      const textboxes = document.querySelectorAll(".textbox");
+      const inputs = document.querySelectorAll("input");
+
+      let checkedCheckboxes = [];
+      
+      // Add event listeners to checkboxes and textboxes
+      inputs.forEach((element) => {
+        if (element.type == "checkbox") {
+          element.addEventListener("change", () => {
+            if (element.checked) {
+              let currentMsg = [];
+              checkedCheckboxes.push(element.id);
+              checkedCheckboxes.forEach((checkbox) => {
+                const id = checkbox[8];
+                const label = "Textbox " + id + ":";
+                const message = document.getElementById("textbox" + id).value;
+                currentMsg.push(`${label} ${message}`);
+              });
+              socket.emit("user-message", currentMsg);
+            } else {
+              const checkboxid = checkedCheckboxes.indexOf(element.id);
+              if (checkboxid !== -1) {
+                checkedCheckboxes.splice(checkboxid, 1);
+              }
+              let currentMsg = [];
+              checkedCheckboxes.forEach((checkbox) => {
+                const id = checkbox[8];
+                const label = "Textbox " + id + ":";
+                const message = document.getElementById("textbox" + id).value;
+                currentMsg.push(`${label} ${message}`);
+              });
+              socket.emit("user-message", currentMsg);
+            }
+          });
+        } else {
+          element.addEventListener("input", () => {
+            const textid = element.id[7]; //detecting which numbered box it is
+            if (checkedCheckboxes.includes("checkbox" + textid)) {
+              let currentMsg = [];
+              checkedCheckboxes.forEach((checkbox) => {
+                const id = checkbox[8];
+                const label = "Textbox " + id + ":";
+                const message = document.getElementById("textbox" + id).value;
+                currentMsg.push(`${label} ${message}`);
+              });
+              socket.emit("user-message", currentMsg);
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
