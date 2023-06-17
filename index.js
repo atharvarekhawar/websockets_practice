@@ -3,6 +3,14 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const http = require('http');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+
+// Load the Swagger YAML file
+const swaggerDocument = YAML.load('./swagger.yaml');
+
+// Serve the Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Create an HTTP server using Express app
 const server = http.createServer(app);
@@ -27,12 +35,34 @@ app.use(express.static(path.resolve('./public')));
 
 // Handle the root route
 app.get('/', (req, res) => {
+  /**
+   * @swagger
+   * /:
+   *   get:
+   *     summary: Returns the homepage.
+   *     responses:
+   *       '200':
+   *         description: OK
+   *       '500':
+   *         description: Internal Server Error
+   */
   // Serve 'page1.html'
   res.sendFile(path.join(__dirname, 'public', 'page1.html'));
 });
 
 // Handle '/page2' route
-app.get('/page2', (req, res) => {
+app.get('/displayPage', (req, res) => {
+   /**
+   * @swagger
+   * /page2:
+   *   get:
+   *     summary: Returns page 2.
+   *     responses:
+   *       '200':
+   *         description: OK
+   *       '500':
+   *         description: Internal Server Error
+   */
   // Serve 'page2.html'
   res.sendFile(path.join(__dirname, 'public', 'page2.html'));
 });

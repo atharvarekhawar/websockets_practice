@@ -1,0 +1,27 @@
+openapi: 3.0.0
+info:
+  title: Websockets
+  version: 1.0.0
+  description: API documentation for your Node.js server
+servers:
+  - url: http://localhost:5000 
+paths:
+  /:
+    get:
+      summary: Returns input page (1st web page).
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Server Error
+  /page2:
+    get:
+      summary: Returns display page (2nd web page).
+      responses:
+        '200':
+          description: OK
+        '500':
+          description: Internal Server Error
+
+
+# you will find the swagger ui on /api-docs route
